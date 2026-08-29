@@ -24,8 +24,14 @@ def validar_aprovacao(score_final: float) -> None:
 def calcular_triagem():
     print("--- SISTEMA DE MICROCRÉDITO INCLUSIVO UniFAP ---")
 
-    score_social = float(input("Digite o Score Social Alternativo (0-100): "))
-    renda_formal = float(input("Digite a Renda Formal CLT (R$): "))
+    while True:
+        score_social = float(input("Digite o Score Social Alternativo (0-100): "))
+        if 0 <= score_social <= 100: break
+        print("Score inválido. Digite um valor entre 0 e 100.")
+    while True:
+        renda_formal = float(input("Digite a Renda Formal CLT (R$): "))
+        if renda_formal >= 0: break
+        print("Renda inválida. Digite um valor maior ou igual a R$ 0.")
 
     score_social = max(0.0, min(score_social, 100.0))
     renda_formal = max(0.0, renda_formal)

@@ -1,0 +1,36 @@
+name: Validacao Tecnica LaunchLab
+on: [push] # Executa o teste toda vez que a célula der 'git push'
+
+jobs:
+  testes-logica:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clonar Codigo da Celula
+      uses: actions/checkout@v4
+
+    - name: Configurar Ambiente Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    # CASO DE TESTE 1: Cliente Informal com Bom Score (Deve ser Aprovado)
+    - name: Testar Cliente Informal de Alto Score
+      run: |
+        OUTPUT=$(echo -e "80\n0" | python src/triagem.py)
+        if [[ "$OUTPUT" =~ "Resultado: Aprovado" ]]; then
+          echo "✅ Teste 1 Passou!"
+        else
+          echo "❌ Teste 1 Falhou: Cliente informal com bom score foi bloqueado."
+          exit 1
+        fi
+
+    # CASO DE TESTE 2: Cliente com Baixo Score e Sem Renda (Deve ser Reprovado)
+    - name: Testar Cliente de Baixo Score
+      run: |
+        OUTPUT=$(echo -e "40\n0" | python src/triagem.py)
+        if [[ "$OUTPUT" =~ "Resultado: Reprovado" ]]; then
+          echo "✅ Teste 2 Passou!"
+        else
+          echo "❌ Teste 2 Falhou: Cliente com baixo score não foi reprovado."
+          exit 1
+        fi

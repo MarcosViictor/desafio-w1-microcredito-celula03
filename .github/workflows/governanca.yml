@@ -1,0 +1,31 @@
+name: Auditoria de Governanca e Rastreabilidade
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  auditar-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositorio (com historico completo)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Executar Auditoria de Commits e Rastreabilidade
+        run: python src/scripts/auditar_commits.py
+
+      - name: Armazenar Relatorio de Rastreabilidade como Artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-rastreabilidade
+          path: docs/relatorio_rastreabilidade.json
